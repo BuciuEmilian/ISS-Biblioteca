@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="253.0" prefWidth="415.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="iss.library.libraryiss1.controller.RegisterSubscriberController">
+   <children>
+      <TextField fx:id="cnpField" layoutX="40.0" layoutY="85.0" promptText="CNP" />
+      <TextField fx:id="nameField" layoutX="40.0" layoutY="127.0" promptText="nume" />
+      <TextField fx:id="streetNameField" layoutX="238.0" layoutY="86.0" promptText="strada" />
+      <TextField fx:id="phoneField" layoutX="40.0" layoutY="169.0" promptText="telefon" />
+      <TextField fx:id="streetNumberField" layoutX="238.0" layoutY="125.0" promptText="numar" />
+      <TextField fx:id="countyField" layoutX="238.0" layoutY="170.0" promptText="judet" />
+      <Label layoutX="135.0" layoutY="14.0" text="Inregistrare abonat">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Button layoutX="166.0" layoutY="214.0" mnemonicParsing="false" onAction="#handleRegisterSubscriber" text="Inregistreaza" />
+      <Label layoutX="238.0" layoutY="58.0" text="Adresa:" />
+      <Label layoutX="40.0" layoutY="57.0" text="Date personale:" />
+   </children>
+</AnchorPane>
