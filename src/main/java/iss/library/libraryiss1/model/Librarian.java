@@ -3,6 +3,10 @@ package iss.library.libraryiss1.model;
 public class Librarian extends Registered {
     private int salary;
 
+    public Librarian() {
+        super("", "");
+    }
+
     public Librarian(String username, String password) {
         super("", username, password);
         this.salary = 0;

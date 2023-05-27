@@ -1,6 +1,8 @@
 package iss.library.libraryiss1.persistence.repository.hibernate;
 
 import iss.library.libraryiss1.model.Book;
+import iss.library.libraryiss1.model.Borrow;
+import iss.library.libraryiss1.model.Subscriber;
 import iss.library.libraryiss1.persistence.IBooksRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,10 +10,10 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class BookRepositoryHibernate implements IBooksRepository {
+public class BooksRepositoryHibernate implements IBooksRepository {
     private final HibernateUtils dbUtils;
 
-    public BookRepositoryHibernate() {
+    public BooksRepositoryHibernate() {
         this.dbUtils = new HibernateUtils();
     }
 
@@ -73,7 +75,30 @@ public class BookRepositoryHibernate implements IBooksRepository {
 
     @Override
     public Book findBy(String title, String author) {
-        return null;
+        Book book = null;
+
+        SessionFactory sessionFactory =  dbUtils.getSessionFactory();
+        try(Session session = sessionFactory.openSession()) {
+            Transaction tx = null;
+            try {
+                tx = session.beginTransaction();
+                String queryString = "FROM Book WHERE title = :title and author = :author";
+                List<Book> resultList = session
+                        .createQuery(queryString, Book.class)
+                        .setParameter("title", title)
+                        .setParameter("author", author)
+                        .list();
+                book = resultList.get(0);
+                tx.commit();
+            }
+            catch (RuntimeException e) {
+                System.out.println("Eroare la select " + e);
+                if (tx != null)
+                    tx.rollback();
+            }
+        }
+        dbUtils.close();
+        return book;
     }
 
     @Override

@@ -3,7 +3,7 @@ package iss.library.libraryiss1;
 import iss.library.libraryiss1.controller.LibrarianLoginController;
 import iss.library.libraryiss1.controller.SubscriberLoginController;
 import iss.library.libraryiss1.persistence.*;
-import iss.library.libraryiss1.persistence.repository.jdbc.*;
+import iss.library.libraryiss1.persistence.repository.hibernate.*;
 import iss.library.libraryiss1.services.Services;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,20 +17,12 @@ import java.util.Properties;
 public class StartApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Properties props = new Properties();
-        try {
-            props.load(StartApplication.class.getResourceAsStream("/db.properties"));
-            System.out.println("Services properties set. ");
-            props.list(System.out);
-        } catch (IOException e) {
-            System.err.println("Cannot find db.properties " + e);
-        }
+        ILibrariansRepository librariansRepository = new LibrariansRepositoryHibernate();
+        IAddressesRepository addressesRepository = new AddressesRepositoryHibernate();
+        ISubscribersRepository subscribersRepository = new SubscribersRepositoryHibernate();
+        IBorrowsRepository borrowsRepository = new BorrowsRepositoryHibernate();
+        IBooksRepository booksRepository = new BooksRepositoryHibernate();
 
-        ILibrariansRepository librariansRepository = new LibrariansRepositoryJdbc(props);
-        IAddressesRepository addressesRepository = new AdressesRepositoryJdbc(props);
-        ISubscribersRepository subscribersRepository = new SubscribersRepositoryJdbc(props);
-        IBorrowsRepository borrowsRepository = new BorrowsRepositoryJdbc(props);
-        IBooksRepository booksRepository = new BooksRepositoryJdbc(props);
         Services services = new Services(
                 addressesRepository,
                 librariansRepository,

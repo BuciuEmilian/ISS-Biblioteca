@@ -1,0 +1,26 @@
+<hibernate-mapping>
+    <class name="iss.library.libraryiss1.model.Borrow" table="borrows">
+        <id name="id" type="java.lang.Integer">
+            <generator class="increment"/>
+        </id>
+        <property name="borrowStatus"
+                  column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">iss.library.libraryiss1.model.BorrowStatus</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+        <property name="borrowDate"
+                  column="borrow_date"
+                  type="java.sql.Date"/>
+        <property name="returnDate"
+                  column="return_date"
+                  type="java.sql.Date"/>
+        <many-to-one name="book"
+                     class="iss.library.libraryiss1.model.Book"
+                     column="book_id"/>
+        <many-to-one name="subscriber"
+                     class="iss.library.libraryiss1.model.Subscriber"
+                     column="subscriber_id"/>
+    </class>
+</hibernate-mapping>

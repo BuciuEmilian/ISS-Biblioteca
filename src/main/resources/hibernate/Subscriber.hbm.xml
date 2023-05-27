@@ -1,0 +1,25 @@
+<hibernate-mapping>
+    <class name="iss.library.libraryiss1.model.Subscriber" table="subscribers">
+        <id name="id" column="id">
+            <generator class="increment"/>
+        </id>
+        <property name="name"
+                  column="name"
+                  type="string"/>
+        <property name="username"
+                  column="username"
+                  type="string"/>
+        <property name="password"
+                  column="password"
+                  type="string"/>
+        <property name="CNP"
+                  column="cnp"
+                  type="long"/>
+        <property name="phoneNumber"
+                  column="phone_number"
+                  type="string"/>
+        <many-to-one name="address"
+                     class="iss.library.libraryiss1.model.Address"
+                     column="address_id"/>
+    </class>
+</hibernate-mapping>

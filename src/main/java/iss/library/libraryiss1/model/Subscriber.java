@@ -3,7 +3,11 @@ package iss.library.libraryiss1.model;
 public class Subscriber extends Registered {
     private long CNP;
     private String phoneNumber;
-    private int addressId;
+    private Address address;
+
+    public Subscriber() {
+        super("", "");
+    }
 
     public Subscriber(String username, String password) {
         super(username, password);
@@ -25,11 +29,11 @@ public class Subscriber extends Registered {
         this.phoneNumber = phoneNumber;
     }
 
-    public Subscriber(String name, String username, String password, long CNP, String phoneNumber, int addressId) {
+    public Subscriber(String name, String username, String password, long CNP, String phoneNumber, Address address) {
         super(name, username, password);
         this.CNP = CNP;
         this.phoneNumber = phoneNumber;
-        this.addressId = addressId;
+        this.address = address;
     }
 
     public long getCNP() {
@@ -48,11 +52,11 @@ public class Subscriber extends Registered {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getAddressId() {
-        return addressId;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddressId(int addressId) {
-        this.addressId = addressId;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

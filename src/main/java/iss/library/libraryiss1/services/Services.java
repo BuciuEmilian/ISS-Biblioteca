@@ -1,14 +1,12 @@
 package iss.library.libraryiss1.services;
 
-import iss.library.libraryiss1.model.Address;
-import iss.library.libraryiss1.model.Book;
-import iss.library.libraryiss1.model.Librarian;
-import iss.library.libraryiss1.model.Subscriber;
+import iss.library.libraryiss1.model.*;
 import iss.library.libraryiss1.persistence.*;
 import iss.library.libraryiss1.persistence.exceptions.RepositoryException;
 import iss.library.libraryiss1.services.Observer.Observable;
 import iss.library.libraryiss1.services.Observer.Observer;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +109,7 @@ public class Services implements Observable {
                 newAddress = this.addressesRepository.save(address);
 
             // link the subscriber to his address
-            subscriber.setAddressId(newAddress.getId());
+            subscriber.setAddress(newAddress);
             this.subscribersRepository.save(subscriber);
 //        this.notifyObservers();
         }
@@ -119,5 +117,29 @@ public class Services implements Observable {
 
             System.out.println(ex.getMessage());
         }
+    }
+
+    public List<Subscriber> findAllSubscribers() {
+        return this.subscribersRepository.findAll();
+    }
+
+    public List<Borrow> findBorrows() {
+        return this.findBorrows(null, true);
+    }
+
+    public List<Borrow> findBorrows(Subscriber subscriber) {
+        return this.findBorrows(subscriber, false);
+    }
+
+    private List<Borrow> findBorrows(Subscriber subscriber, boolean all) {
+        if (subscriber == null || all)
+            return this.borrowsRepository.findAll();
+
+        return this.borrowsRepository.findBorrowsBySubscriberId(subscriber.getId());
+    }
+
+    public void borrowBook(Book book, Subscriber subscriber) {
+        Borrow borrow = new Borrow(book, subscriber);
+        this.borrowsRepository.save(borrow);
     }
 }

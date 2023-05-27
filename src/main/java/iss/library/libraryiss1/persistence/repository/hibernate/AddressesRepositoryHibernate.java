@@ -8,11 +8,11 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class AddressRepositoryHibernate implements IAddressesRepository {
+public class AddressesRepositoryHibernate implements IAddressesRepository {
 
     private final HibernateUtils dbUtils;
 
-    public AddressRepositoryHibernate() {
+    public AddressesRepositoryHibernate() {
         this.dbUtils = new HibernateUtils();
     }
 

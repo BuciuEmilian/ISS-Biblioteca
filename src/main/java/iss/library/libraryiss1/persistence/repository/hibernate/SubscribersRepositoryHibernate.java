@@ -8,10 +8,10 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class SubscriberRepositoryHibernate implements ISubscribersRepository {
+public class SubscribersRepositoryHibernate implements ISubscribersRepository {
     private final HibernateUtils dbUtils;
 
-    public SubscriberRepositoryHibernate() {
+    public SubscribersRepositoryHibernate() {
         this.dbUtils = new HibernateUtils();
     }
 
@@ -50,6 +50,7 @@ public class SubscriberRepositoryHibernate implements ISubscribersRepository {
             Transaction tx = null;
             try {
                 tx = session.beginTransaction();
+                System.out.println("salvez asta");
                 session.save(subscriber);
                 tx.commit();
             } catch (RuntimeException ex) {

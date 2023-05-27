@@ -63,12 +63,12 @@ public class LibrarianMainController implements Observer {
 
     @FXML
     public void initialize() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
-        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        tableView.setItems(booksModel);
+        this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        this.titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        this.authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        this.genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        this.quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        this.tableView.setItems(booksModel);
     }
 
     private void initTable() {
@@ -86,6 +86,24 @@ public class LibrarianMainController implements Observer {
     }
 
     @FXML
+    public void handleBorrowsMenu(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                getClass().getClassLoader().getResource("borrows-view.fxml")
+        );
+        Parent mainRoot = fxmlLoader.load();
+
+        BorrowsController borrowsController = fxmlLoader.getController();
+        borrowsController.setService(service);
+
+        Stage stage = new Stage();
+        stage.setTitle("Borrows window for " + librarian.getName());
+        stage.setScene(new Scene(mainRoot));
+        stage.show();
+
+        borrowsController.init();
+    }
+
+    @FXML
     public void handleRegisterSubscriber(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getClassLoader().getResource("signup-view.fxml")
@@ -100,6 +118,7 @@ public class LibrarianMainController implements Observer {
         stage.setScene(new Scene(mainRoot));
         stage.show();
     }
+
 
     @FXML
     public void handleAddBook(ActionEvent actionEvent) {

@@ -2,34 +2,87 @@ package iss.library.libraryiss1.model;
 
 import java.sql.Date;
 
-public class Borrow implements Identifiable<Pair<Integer, Integer>>{
+public class Borrow implements Identifiable<Integer>{
+    private Book book;
+    private Subscriber subscriber;
     private BorrowStatus borrowStatus;
     private Date borrowDate;
     private Date returnDate;
 
     public Borrow() {
         this.borrowStatus = BorrowStatus.ACTIVE;
-        this.borrowDate = new Date(System.currentTimeMillis());
     }
 
-    public Borrow(BorrowStatus status, Date borrowDate, Date returnDate) {
-        this.borrowStatus = status;
+    public Borrow(Book book, Subscriber subscriber, BorrowStatus borrowStatus, Date borrowDate, Date returnDate) {
+        this.book = book;
+        this.subscriber = subscriber;
+        this.borrowStatus = borrowStatus;
+        this.borrowDate = borrowDate;
+        this.returnDate = returnDate;
+    }
+
+    public Borrow(Book book, Subscriber subscriber, Date borrowDate) {
+        this(
+                book,
+                subscriber,
+                BorrowStatus.ACTIVE,
+                borrowDate,
+                null
+        );
+    }
+
+    public Borrow(Book book, Subscriber subscriber) {
+        this(
+                book,
+                subscriber,
+                BorrowStatus.ACTIVE,
+                new Date(System.currentTimeMillis()),
+                null
+        );
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public Subscriber getSubscriber() {
+        return subscriber;
+    }
+
+    public void setSubscriber(Subscriber subscriber) {
+        this.subscriber = subscriber;
+    }
+
+    public String getBookTitle() {
+        return this.book.getTitle();
+    }
+
+    public String getBookAuthor() {
+        return this.book.getAuthor();
+    }
+
+    public String getSubscriberName() {
+        return this.subscriber.getName();
     }
 
     public Integer getBookId() {
-        return id.getFirst();
+        return book.getId();
     }
 
     public void setBookId(Integer bookId) {
-        this.id.setFirst(bookId);
+        this.book.setId(bookId);
     }
 
     public Integer getSubscriberId() {
-        return id.getSecond();
+        return subscriber.getId();
     }
 
     public void setSubscriberId(Integer subscriberId) {
-        this.id.setSecond(subscriberId);
+        this.subscriber.setId(subscriberId);
     }
 
     public BorrowStatus getBorrowStatus() {
@@ -48,19 +101,22 @@ public class Borrow implements Identifiable<Pair<Integer, Integer>>{
         this.borrowDate = borrowDate;
     }
 
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
     public void setReturnDate(Date returnDate) {
         this.returnDate = returnDate;
     }
 
-    Pair<Integer, Integer> id = new Pair<>(-1, -1);
+    private Integer id;
     @Override
-    public Pair<Integer, Integer> getId() {
+    public Integer getId() {
         return id;
     }
 
     @Override
-    public void setId(Pair<Integer, Integer> id) {
-        this.setBookId(id.getFirst());
-        this.setSubscriberId(id.getSecond());
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

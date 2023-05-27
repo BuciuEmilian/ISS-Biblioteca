@@ -1,8 +1,15 @@
 package iss.library.libraryiss1.model;
 
-public class Pair<T1, T2> {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Pair<T1 extends Serializable, T2 extends Serializable> implements Serializable {
     private T1 first;
     private T2 second;
+
+    public Pair() {
+
+    }
 
     public Pair(T1 first, T2 second) {
         this.first = first;
@@ -23,5 +30,18 @@ public class Pair<T1, T2> {
 
     public void setSecond(T2 second) {
         this.second = second;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return Objects.equals(first, pair.first) && Objects.equals(second, pair.second);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
     }
 }
