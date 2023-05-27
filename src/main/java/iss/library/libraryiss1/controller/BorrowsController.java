@@ -5,9 +5,12 @@ import iss.library.libraryiss1.services.Observer.Observer;
 import iss.library.libraryiss1.services.Services;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.sql.Date;
 import java.util.List;
@@ -49,6 +52,45 @@ public class BorrowsController implements Observer {
         this.borrowDateColumn.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
         this.returnDateColumn.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
         this.tableView.setItems(borrowsModel);
+
+        Callback<ListView<Subscriber>, ListCell<Subscriber>> factory = lv -> new ListCell<Subscriber>() {
+
+            @Override
+            protected void updateItem(Subscriber item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getName());
+            }
+
+        };
+
+        subscribersCombo.setCellFactory(param -> new ListCell<Subscriber>() {
+            @Override
+            protected void updateItem(Subscriber subscriber, boolean empty) {
+                super.updateItem(subscriber, empty);
+                if (empty || subscriber == null) {
+                    setText(null);
+                } else {
+                    setText(subscriber.getName());
+                }
+            }
+        });
+
+        subscribersCombo.setConverter(new StringConverter<Subscriber>() {
+            @Override
+            public String toString(Subscriber subscriber) {
+                if (subscriber == null) {
+                    return null;
+                } else {
+                    return subscriber.getName();
+                }
+            }
+
+            @Override
+            public Subscriber fromString(String string) {
+                return null;
+            }
+        });
+
         this.subscribersCombo.setItems(subscribersModel);
     }
 
@@ -75,5 +117,11 @@ public class BorrowsController implements Observer {
     @Override
     public void update() {
         this.init();
+    }
+
+    @FXML
+    public void handleComboChanged(ActionEvent actionEvent) {
+        System.out.println(subscribersCombo.getValue().getId());
+        this.initTable(subscribersCombo.getValue());
     }
 }

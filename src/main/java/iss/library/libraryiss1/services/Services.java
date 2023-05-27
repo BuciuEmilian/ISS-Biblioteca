@@ -9,6 +9,7 @@ import iss.library.libraryiss1.services.Observer.Observer;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Services implements Observable {
     private final IAddressesRepository addressesRepository;
@@ -138,8 +139,18 @@ public class Services implements Observable {
         return this.borrowsRepository.findBorrowsBySubscriberId(subscriber.getId());
     }
 
+    public List<Book> findAllBorrowedBooks(Subscriber subscriber) {
+        return this.borrowsRepository
+                .findBorrowsBySubscriberId(subscriber.getId())
+                .stream()
+                .map(Borrow::getBook)
+                .collect(Collectors.toList());
+    }
+
     public void borrowBook(Book book, Subscriber subscriber) {
         Borrow borrow = new Borrow(book, subscriber);
         this.borrowsRepository.save(borrow);
+
+        notifyObservers();
     }
 }

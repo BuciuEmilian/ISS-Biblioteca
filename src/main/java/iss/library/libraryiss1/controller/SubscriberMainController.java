@@ -86,8 +86,8 @@ public class SubscriberMainController implements Observer {
     private void initTable() {
         List<Book> availableBooks = this.service.findAllBooks();
         availableBooksModel.setAll(availableBooks);
-//        List<Book> borrowedBooks = this.service.findAllBorrowedBooks(this.Subscriber);
-//        borrowedBooksModel.setAll(books);
+        List<Book> borrowedBooks = this.service.findAllBorrowedBooks(this.subscriber);
+        borrowedBooksModel.setAll(borrowedBooks);
     }
 
     public void init() {
@@ -101,6 +101,8 @@ public class SubscriberMainController implements Observer {
 
     @FXML
     public void handleBorrowBook(ActionEvent actionEvent) {
-        // TODO:
+        Book selected = availableBooksTable.getSelectionModel().getSelectedItem();
+        if (selected != null && selected.getQuantity() > 0)
+            this.service.borrowBook(selected, this.subscriber);
     }
 }
