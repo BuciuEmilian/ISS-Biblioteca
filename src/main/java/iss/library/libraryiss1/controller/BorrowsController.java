@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.sql.Date;
@@ -118,11 +117,11 @@ public class BorrowsController implements Observer {
     @FXML
     public void handleReturnButton(ActionEvent actionEvent) {
         Borrow selectedBorrow = tableView.getSelectionModel().getSelectedItem();
-        Subscriber selectedSubscriber = subscribersCombo.getValue();
-        if (selectedBorrow != null && selectedSubscriber != null) {
+        if (selectedBorrow != null) {
+            Subscriber subscriber = selectedBorrow.getSubscriber();
             if (selectedBorrow.getBorrowStatus() == BorrowStatus.ACTIVE) {
                 Book book = selectedBorrow.getBook();
-                this.service.returnBook(book, selectedSubscriber);
+                this.service.returnBook(book, subscriber);
             }
             else {
                 System.out.println("Nu se poate returna");
