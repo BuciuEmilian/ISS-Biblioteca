@@ -1,6 +1,7 @@
 package iss.library.libraryiss1.controller;
 
 import iss.library.libraryiss1.model.Book;
+import iss.library.libraryiss1.model.Borrow;
 import iss.library.libraryiss1.model.Subscriber;
 import iss.library.libraryiss1.services.Observer.Observer;
 import iss.library.libraryiss1.services.Services;
@@ -19,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 public class SubscriberMainController implements Observer {
@@ -32,29 +34,27 @@ public class SubscriberMainController implements Observer {
     @FXML
     private TableView<Book> availableBooksTable;
     @FXML
-    private TableColumn<Book, Integer> availableIdColumn;
-    @FXML
     private TableColumn<Book, String> availableTitleColumn;
     @FXML
     private TableColumn<Book, String> availableAuthorColumn;
     @FXML
-    private TableColumn<Book, String> availableGenreColumn;
+    private TableColumn<Book, Date> availableGenreColumn;
     @FXML
     private TableColumn<Book, Integer> availableQuantityColumn;
 
-    private final ObservableList<Book> borrowedBooksModel = FXCollections.observableArrayList();
+    private final ObservableList<Borrow> borrowsModel = FXCollections.observableArrayList();
     @FXML
-    private TableView<Book> borrowedBooksTable;
+    private TableView<Borrow> borrowsTable;
     @FXML
-    private TableColumn<Book, Integer> borrowedIdColumn;
+    private TableColumn<Borrow, String> borrowedTitleColumn;
     @FXML
-    private TableColumn<Book, String> borrowedTitleColumn;
+    private TableColumn<Borrow, String> borrowedAuthorColumn;
     @FXML
-    private TableColumn<Book, String> borrowedAuthorColumn;
+    private TableColumn<Borrow, String> borrowStatusColumn;
     @FXML
-    private TableColumn<Book, String> borrowedGenreColumn;
+    private TableColumn<Borrow, Date> borrowDateColumn;
     @FXML
-    private TableColumn<Book, Integer> borrowedQuantityColumn;
+    private TableColumn<Borrow, Date> returnDateColumn;
 
     public void setService(Services service) {
         this.service = service;
@@ -68,26 +68,25 @@ public class SubscriberMainController implements Observer {
 
     @FXML
     public void initialize() {
-        availableIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         availableTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         availableAuthorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         availableGenreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
         availableQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         availableBooksTable.setItems(availableBooksModel);
 
-        borrowedIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        borrowedTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        borrowedAuthorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
-        borrowedGenreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
-        borrowedQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        borrowedBooksTable.setItems(borrowedBooksModel);
+        borrowedTitleColumn.setCellValueFactory(new PropertyValueFactory<>("bookTitle"));
+        borrowedAuthorColumn.setCellValueFactory(new PropertyValueFactory<>("bookAuthor"));
+        borrowStatusColumn.setCellValueFactory(new PropertyValueFactory<>("borrowStatus"));
+        borrowDateColumn.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
+        returnDateColumn.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        borrowsTable.setItems(borrowsModel);
     }
 
     private void initTable() {
         List<Book> availableBooks = this.service.findAllBooks();
         availableBooksModel.setAll(availableBooks);
-        List<Book> borrowedBooks = this.service.findAllBorrowedBooks(this.subscriber);
-        borrowedBooksModel.setAll(borrowedBooks);
+        List<Borrow> borrows = this.service.findBorrows(this.subscriber);
+        borrowsModel.setAll(borrows);
     }
 
     public void init() {

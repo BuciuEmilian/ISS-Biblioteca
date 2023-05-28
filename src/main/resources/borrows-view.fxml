@@ -18,7 +18,7 @@
             <TableColumn fx:id="returnDateColumn" prefWidth="90.0" text="data retur" />
         </columns>
       </TableView>
-      <Button layoutX="79.0" layoutY="332.0" mnemonicParsing="false" text="Returneaza" />
+      <Button layoutX="79.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleReturnButton" text="Returneaza" />
       <ComboBox fx:id="subscribersCombo" layoutX="26.0" layoutY="76.0" onAction="#handleComboChanged" prefHeight="25.0" prefWidth="182.0" />
    </children>
 </AnchorPane>

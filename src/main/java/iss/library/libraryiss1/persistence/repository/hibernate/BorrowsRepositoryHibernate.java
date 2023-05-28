@@ -35,7 +35,20 @@ public class BorrowsRepositoryHibernate implements IBorrowsRepository {
 
     @Override
     public void update(Borrow borrow) {
-
+        SessionFactory sessionFactory = this.dbUtils.getSessionFactory();
+        try(Session session = sessionFactory.openSession()) {
+            Transaction tx = null;
+            try {
+                tx = session.beginTransaction();
+                session.update(borrow);
+                tx.commit();
+            } catch (RuntimeException ex) {
+                System.err.println("Eroare la inserare " + ex);
+                if (tx != null)
+                    tx.rollback();
+            }
+        }
+        dbUtils.close();
     }
 
     @Override
@@ -65,6 +78,34 @@ public class BorrowsRepositoryHibernate implements IBorrowsRepository {
     }
 
     @Override
+    public Borrow findBy(int subscriberId, int bookId) {
+        SessionFactory sessionFactory = this.dbUtils.getSessionFactory();
+        Borrow borrow = null;
+        try(Session session = sessionFactory.openSession()) {
+            Transaction tx = null;
+            try {
+                tx = session.beginTransaction();
+                List<Borrow> resultList = session
+                        .createQuery("SELECT b FROM Borrow b " +
+                                "INNER JOIN FETCH b.book " +
+                                "INNER JOIN FETCH b.subscriber " +
+                                "WHERE b.subscriber.id = :subscriber_id AND b.book.id = :book_id" , Borrow.class)
+                        .setParameter("subscriber_id", subscriberId)
+                        .setParameter("book_id", bookId)
+                        .list();
+                borrow = resultList.get(0);
+                tx.commit();
+            } catch (RuntimeException ex) {
+                System.err.println("Eroare la select "+ex);
+                if (tx != null)
+                    tx.rollback();
+            }
+        }
+        dbUtils.close();
+        return borrow;
+    }
+
+    @Override
     public List<Borrow> findAll() {
         SessionFactory sessionFactory = this.dbUtils.getSessionFactory();
         List<Borrow> borrows = null;
@@ -73,7 +114,9 @@ public class BorrowsRepositoryHibernate implements IBorrowsRepository {
             try {
                 tx = session.beginTransaction();
                 borrows = session
-                        .createQuery("SELECT b FROM Borrow b INNER JOIN FETCH b.book INNER JOIN FETCH b.subscriber" , Borrow.class)
+                        .createQuery("SELECT b FROM Borrow b " +
+                                "INNER JOIN FETCH b.book " +
+                                "INNER JOIN FETCH b.subscriber" , Borrow.class)
                         .list();
                 tx.commit();
             } catch (RuntimeException ex) {

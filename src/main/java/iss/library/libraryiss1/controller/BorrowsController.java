@@ -41,6 +41,7 @@ public class BorrowsController implements Observer {
 
     public void setService(Services service) {
         this.service = service;
+        this.service.addObserver(this);
     }
 
     @FXML
@@ -52,17 +53,6 @@ public class BorrowsController implements Observer {
         this.borrowDateColumn.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
         this.returnDateColumn.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
         this.tableView.setItems(borrowsModel);
-
-        Callback<ListView<Subscriber>, ListCell<Subscriber>> factory = lv -> new ListCell<Subscriber>() {
-
-            @Override
-            protected void updateItem(Subscriber item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? "" : item.getName());
-            }
-
-        };
-
         subscribersCombo.setCellFactory(param -> new ListCell<Subscriber>() {
             @Override
             protected void updateItem(Subscriber subscriber, boolean empty) {
@@ -95,8 +85,8 @@ public class BorrowsController implements Observer {
     }
 
     public void init() {
-        this.initTable(this.subscribersCombo.getValue());
         this.initCombo();
+        this.initTable(this.subscribersCombo.getValue());
     }
 
     private void initTable(Subscriber subscriber) {
@@ -123,5 +113,20 @@ public class BorrowsController implements Observer {
     public void handleComboChanged(ActionEvent actionEvent) {
         System.out.println(subscribersCombo.getValue().getId());
         this.initTable(subscribersCombo.getValue());
+    }
+
+    @FXML
+    public void handleReturnButton(ActionEvent actionEvent) {
+        Borrow selectedBorrow = tableView.getSelectionModel().getSelectedItem();
+        Subscriber selectedSubscriber = subscribersCombo.getValue();
+        if (selectedBorrow != null && selectedSubscriber != null) {
+            if (selectedBorrow.getBorrowStatus() == BorrowStatus.ACTIVE) {
+                Book book = selectedBorrow.getBook();
+                this.service.returnBook(book, selectedSubscriber);
+            }
+            else {
+                System.out.println("Nu se poate returna");
+            }
+        }
     }
 }

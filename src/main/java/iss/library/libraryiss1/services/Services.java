@@ -73,7 +73,16 @@ public class Services implements Observable {
     }
 
     public void addBook(Book book) {
-        this.booksRepository.save(book);
+        Book existing = this.booksRepository.findBy(book.getTitle(), book.getAuthor());
+        // if the book is already in the deposit, we'll just increase the quantity
+        // instead of adding and identical one
+        if (existing != null) {
+            existing.increaseQuantity(book.getQuantity());
+            this.booksRepository.update(existing);
+        }
+        else {
+            this.booksRepository.save(book);
+        }
         this.notifyObservers();
     }
 
@@ -112,10 +121,8 @@ public class Services implements Observable {
             // link the subscriber to his address
             subscriber.setAddress(newAddress);
             this.subscribersRepository.save(subscriber);
-//        this.notifyObservers();
         }
         catch (Exception ex) {
-
             System.out.println(ex.getMessage());
         }
     }
@@ -139,17 +146,24 @@ public class Services implements Observable {
         return this.borrowsRepository.findBorrowsBySubscriberId(subscriber.getId());
     }
 
-    public List<Book> findAllBorrowedBooks(Subscriber subscriber) {
-        return this.borrowsRepository
-                .findBorrowsBySubscriberId(subscriber.getId())
-                .stream()
-                .map(Borrow::getBook)
-                .collect(Collectors.toList());
-    }
-
     public void borrowBook(Book book, Subscriber subscriber) {
+        book.decreaseQuantity(1);
+        this.booksRepository.update(book);
+
         Borrow borrow = new Borrow(book, subscriber);
         this.borrowsRepository.save(borrow);
+
+        notifyObservers();
+    }
+
+    public void returnBook(Book book, Subscriber subscriber) {
+        book.increaseQuantity(1);
+        this.booksRepository.update(book);
+
+        Borrow borrow = this.borrowsRepository.findBy(subscriber.getId(), book.getId());
+        borrow.setReturnDate(new Date(System.currentTimeMillis()));
+        borrow.setBorrowStatus(BorrowStatus.SOLVED);
+        this.borrowsRepository.update(borrow);
 
         notifyObservers();
     }

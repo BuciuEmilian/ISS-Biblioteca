@@ -51,7 +51,9 @@ public class Book implements Identifiable<Integer> {
     public void increaseQuantity(int quantity) {
         this.quantity += quantity;
     }
-
+    public void decreaseQuantity(int quantity) {
+        this.quantity -= quantity;
+    }
     @Override
     public String toString() {
         return "Book{" +
